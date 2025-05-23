@@ -56,6 +56,32 @@ SaaDesklet.prototype = {
         this.haeSaa();
         this.updateLoop(); // Päivitä myös ajastin
     },
+
+    getWeatherEmoji: function(weatherCondition) {
+        // Tarkista pääkategoria (main field)
+        switch(weatherCondition.toLowerCase()) {
+            case 'clear':
+                return '☀️';
+            case 'clouds':
+                return '☁️';
+            case 'rain':
+                return '🌧️';
+            case 'drizzle':
+                return '🌦️';
+            case 'thunderstorm':
+                return '⛈️';
+            case 'snow':
+                return '❄️';
+            case 'mist':
+                return '🌫';
+            case 'fog':
+                return '🌫';
+            case 'haze':
+                return '🌫️';
+            default:
+                return '🌤️';
+        }
+    },
     
     haeSaa: function() {
         // Tarkista että API-avain on asetettu
@@ -64,7 +90,7 @@ SaaDesklet.prototype = {
             return;
         }
         
-        let session = new Soup.SessionAsync();
+        let session = new Soup.Session();
         
         // Käytetään forecast API:a 5 päivän ennusteelle
         let url = `https://api.openweathermap.org/data/2.5/forecast?q=${this.city}&appid=${this.apiKey}&units=metric&lang=fi`;
@@ -81,6 +107,8 @@ SaaDesklet.prototype = {
                     let tanaan = data.list[0];
                     let tanaanLampotila = Math.round(tanaan.main.temp);
                     let tanaanKuvaus = tanaan.weather[0].description;
+                    
+                    let tanaanKuvake = this.getWeatherEmoji(tanaan.weather[0].main);
                     
                     // Huomisen sää - etsitään huomisen keskipäivän sää (noin 12:00)
                     let huomenna = null;
@@ -107,12 +135,14 @@ SaaDesklet.prototype = {
                         }
                     }
                     
-                    let tekstiTulos = `${this.city}\nTänään: ${tanaanLampotila}°C, ${tanaanKuvaus}`;
+                    let tekstiTulos = `${this.city}\nTänään: ${tanaanLampotila}°C, ${tanaanKuvaus} ${tanaanKuvake}`;
                     
                     if (huomenna) {
                         let huomennaLampotila = Math.round(huomenna.main.temp);
                         let huomennaKuvaus = huomenna.weather[0].description;
-                        tekstiTulos += `\nHuomenna: ${huomennaLampotila}°C, ${huomennaKuvaus}`;
+                        let huomennaKuvake = this.getWeatherEmoji(huomenna.weather[0].main);
+
+                        tekstiTulos += `\nHuomenna: ${huomennaLampotila}°C, ${huomennaKuvaus} ${huomennaKuvake}`;
                     }
                     
                     this.text.set_text(tekstiTulos);
