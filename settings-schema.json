@@ -1,0 +1,24 @@
+{
+    "api-key": {
+        "type": "entry",
+        "default": "",
+        "description": "OpenWeatherMap API Key",
+        "tooltip": "Hanki Api avain https://openweathermap.org/api"
+    },
+    "city": {
+        "type": "entry",
+        "default": "Helsinki",
+        "description": "Kaupunki",
+        "tooltip": "Kirjoita kaupungin nimi ennustetta varten"
+    },
+    "update-interval": {
+        "type": "spinbutton",
+        "default": 10,
+        "min": 5,
+        "max": 60,
+        "step": 5,
+        "units": "minutes",
+        "description": "Päivitysnopeus",
+        "tooltip": "Kuinka usein säätiedot päivitetään (minuuteissa)"
+    }
+}
